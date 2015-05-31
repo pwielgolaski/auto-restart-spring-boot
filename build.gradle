@@ -1,0 +1,42 @@
+buildscript {
+    repositories { mavenCentral() }
+    dependencies {
+        classpath("org.springframework.boot:spring-boot-gradle-plugin:1.2.3.RELEASE")
+    }
+}
+
+apply plugin: 'java'
+apply plugin: 'spring-boot'
+
+group 'com.wielgolaski'
+version '1.0-SNAPSHOT'
+
+sourceCompatibility = 1.8
+
+repositories {
+    mavenCentral()
+}
+
+configurations {
+    compile.exclude module: "spring-boot-starter-tomcat"
+}
+
+//sourceSets.main.resources { srcDir "src/main/scripts" }
+
+dependencies {
+    compile("org.springframework.boot:spring-boot-starter-web")
+    compile("org.springframework.boot:spring-boot-starter-jetty")
+    compile("org.springframework.boot:spring-boot-starter-actuator")
+    testCompile("org.springframework.boot:spring-boot-starter-test")
+}
+
+configurations {
+    compile.exclude module: "spring-boot-starter-tomcat"
+}
+
+task zip(type: Zip, dependsOn: bootRepackage) {
+    from('build/libs') { include '*.jar' }
+    from 'scripts'
+}
+
+build.dependsOn(zip)
